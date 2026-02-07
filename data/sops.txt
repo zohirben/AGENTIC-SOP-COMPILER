@@ -1,0 +1,11 @@
+DAILY SELLER OPERATIONS (SOPs) - TITAN NETWORK
+================================================
+
+RULE A: LIQUIDATION TRIGGER
+If an item has been in the warehouse for more than 180 days, its status should be 'Liquidation'.
+
+RULE B: LOW MARGIN WARNING
+If an item makes less than $5 profit per unit, its status should be 'Review'.
+
+RULE C: THE VIP EXCEPTION
+HOWEVER, if an item has been in the warehouse > 180 days BUT it makes more than $20 profit, it is a 'VIP_Keep' (Do not liquidate).

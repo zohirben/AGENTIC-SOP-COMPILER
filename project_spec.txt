@@ -1,0 +1,132 @@
+🏛️ PROJECT TITAN: THE "SOP COMPILER" ARCHITECTURE SPEC
+Version: 1.0 (Finalized)
+Role: Lead Architect & Agentic Engineer
+Objective: Build a demo for Titan Network that proves we can automate "Daily Seller Operations" by compiling natural language SOPs into executable Python code.
+
+🎯 1. THE MISSION (Context for the Agent)
+The Problem: Amazon sellers are drowning in data. They have complex rules (SOPs) but fail to execute them manually.
+The Solution: We are building an "SOP Compiler." It is NOT a chatbot that reads rows one by one. It is an Engine that translates human rules into a robust Python script (Pandas) that scans thousands of products instantly.
+The Vibe: "War Room Briefing." Urgent, actionable, profit-focused.
+
+🛠️ 2. CORE TECH STACK
+Orchestration: LangGraph (State Machine loop).
+
+LLM: Cerebras gpt-oss-120b (120B OpenAI MoE, ~3,000 t/s inference, equivalent to o4-mini reasoning).
+
+Execution: E2B Sandbox (for safe code testing).
+
+Data Validation: Pydantic (for structured rule extraction).
+
+UI: Streamlit (Python-only dashboard).
+
+📅 3. THE SPRINT PLAN (Step-by-Step Implementation)
+SPRINT 1: THE FOUNDATION (Data & Rules)
+Goal: Create a "Rigged" environment to prove the logic works.
+
+1.1 The "Law" (sops.txt)
+
+Content: Simple, conflict-prone rules to test reasoning.
+
+Rule A (Kill): "If Days_in_Warehouse > 180, status is 'Liquidation'."
+
+Rule B (Warning): "If Profit_Per_Item < $5, status is 'Review'."
+
+Rule C (The Exception): "If Days_in_Warehouse > 180 BUT Profit_Per_Item > $20, status is 'VIP_Keep'." (Tests logic).
+
+1.2 The "Test Subject" (mock_data.csv)
+
+Schema: Item_Name, Price, Days_in_Warehouse, Profit_Per_Item.
+
+Volume: 100 Rows.
+
+Rigged Rows: Manually insert rows that trigger Rule A, B, and specifically Rule C to ensure the agent catches the exception.
+
+SPRINT 2: THE COMPILER SETUP (Inputs)
+Goal: Prepare the context so the Coder Agent cannot fail.
+
+2.1 The "Context Stuffer" (Script)
+
+Action: Runs df.head() and df.dtypes on the CSV.
+
+Output: Injects a Markdown table of the exact schema into the Architect's prompt.
+
+Why: Prevents "Column Not Found" errors. The "Blink" strategy.
+
+2.2 The "Rule Extractor" (Agent)
+
+Task: Read sops.txt and output strict JSON.
+
+Tool: Pydantic BaseModel.
+
+Output Format:
+
+json
+[
+  {"rule_id": 1, "logic": "Warehouse days > 180", "exception": "Profit > 20 (VIP)"}
+]
+Why: Separates "Condition" from "Exception" so the Coder can write if condition & ~exception.
+
+SPRINT 3: THE ENGINE (Code Generation Loop)
+Goal: The "Self-Healing" Python Generator.
+
+3.1 The "Architect" (Agent)
+
+Prompt: "You are a Python Data Engineer. Write a Pandas function def apply_filters(df) using the provided Schema and Rules."
+
+Constraint: "Use ONLY Pandas/Numpy. No input(). Vectorized operations only."
+
+3.2 The "Sandbox Loop" (The Magic)
+
+Mechanism:
+
+Draft code.
+
+Run in E2B Sandbox on a tiny sample.csv (5 rows).
+
+Check: Does it crash? Does it print "PROCESS_COMPLETE"?
+
+Loop: If Error -> Send error string back to Architect -> Retry (Max 3 times).
+
+Success: Save code to verified_filter.py.
+
+SPRINT 4: THE VOICE (Runtime & Reporting)
+Goal: The "Morning Brief" Dashboard.
+
+4.1 The Runtime
+
+Action: Load mock_data.csv (10,000 rows). Run verified_filter.py.
+
+Calculation: The Python Script (not the Agent) calculates the totals (e.g., "Total Trapped Capital = $4,200").
+
+Output: violations.csv + summary_stats.json.
+
+4.2 The "Reporter" (Agent)
+
+Persona: "Vigilant CFO."
+
+Input: The violations.csv and summary_stats.json.
+
+Task: Write the Markdown report.
+
+Tone: Urgent. "🚨 Margin Bleed Detected."
+
+4.3 The UI (Streamlit)
+
+Feature: "Simulation Toggle."
+
+Off: Shows boring raw CSV.
+
+On: Shows the "War Room" Markdown Report.
+
+🤖 4. VS CODE AGENT CRITERIA (The "Ideal Helper")
+To execute this plan, your VS Code Agent (Cline, Cursor, or Copilot) must meet these criteria:
+
+Context Aware: It must be able to read this entire ARCHITECT_SPEC.md file before writing a single line of code.
+
+Filesystem Access: It needs to create files (sops.txt, mock_data_gen.py) directly in your folder.
+
+Terminal Access: It should be able to run the Python scripts (e.g., python generate_data.py) to verify they work.
+
+No "Yolo" Coding: It should ask for confirmation before installing libraries or running complex scripts.
+
+Library Knowledge: It must know pandas, pydantic, streamlit, and langgraph syntax perfectly.
